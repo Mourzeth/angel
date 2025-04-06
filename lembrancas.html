@@ -102,7 +102,10 @@
         const div = document.createElement("div");
         div.className = "registro";
         div.innerHTML = `
-          <p>${entrada.texto}</p>
+          <p><strong>Sentimento:</strong> ${entrada.sentimento}</p>
+          <p><strong>Mensagem:</strong> ${entrada.mensagem}</p>
+          <p><strong>Introspecção:</strong> ${entrada.introspecao}</p>
+          <p><strong>Identificação:</strong> ${entrada.registro}</p>
           <small>${entrada.data}</small>
           <button onclick="deletar(${index})">X</button>
         `;
