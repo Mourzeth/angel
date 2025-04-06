@@ -117,60 +117,72 @@
     <button onclick="salvar()">Salvar</button>
     <div class="saved-time" id="saved-time"></div>
   </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyB7ETRaWcGU1XPmGmFN1-s0vtjyw-LBAAs",
+    authDomain: "blouch-8680e.firebaseapp.com",
+    projectId: "blouch-8680e",
+    storageBucket: "blouch-8680e.appspot.com",
+    messagingSenderId: "646457470098",
+    appId: "1:646457470098:web:e220a28b2a9044b31d4a4b"
+  };
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyB7ETRaWcGU1XPmGmFN1-s0vtjyw-LBAAs",
-      authDomain: "blouch-8680e.firebaseapp.com",
-      projectId: "blouch-8680e",
-      storageBucket: "blouch-8680e.appspot.com",
-      messagingSenderId: "646457470098",
-      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b"
-    };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth();
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth();
+  let userUID = null;
 
-    signInAnonymously(auth).catch(console.error);
+  const salvarBtn = document.querySelector("button");
+  salvarBtn.disabled = true; // Desativa o botão até autenticar
 
-    async function salvar() {
-      const texto = document.getElementById("entrada").value.trim();
-      if (!texto) return;
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      userUID = user.uid;
+      salvarBtn.disabled = false; // Ativa o botão
+    } else {
+      await signInAnonymously(auth).catch(console.error);
+    }
+  });
 
-      const uid = auth.currentUser?.uid;
-      if (!uid) {
-        document.getElementById("saved-time").textContent = "Erro de autenticação.";
-        return;
-      }
+  async function salvar() {
+    const texto = document.getElementById("entrada").value.trim();
+    if (!texto) return;
 
-      const ref = collection(db, "usuarios", uid, "registros");
-      try {
-        await addDoc(ref, {
-          texto,
-          timestamp: serverTimestamp()
-        });
-        const agora = new Date().toLocaleTimeString();
-        document.getElementById("saved-time").textContent = `Salvo às ${agora}`;
-        document.getElementById("entrada").value = "";
-      } catch (err) {
-        console.error(err);
-        document.getElementById("saved-time").textContent = "Erro ao salvar.";
-      }
+    if (!userUID) {
+      document.getElementById("saved-time").textContent = "Usuário não autenticado.";
+      return;
     }
 
-    function aplicarTemaNoturno() {
-      const hora = new Date().getHours();
-      if (hora >= 19 || hora < 7) {
-        document.body.classList.add("dark-mode");
-      }
-    }
+    const ref = collection(db, "usuarios", userUID, "registros");
 
-    aplicarTemaNoturno();
-  </script>
-</body>
-</html>
+    try {
+      await addDoc(ref, {
+        texto,
+        timestamp: serverTimestamp()
+      });
+
+      const agora = new Date().toLocaleTimeString();
+      document.getElementById("saved-time").textContent = `Salvo às ${agora}`;
+      document.getElementById("entrada").value = "";
+    } catch (err) {
+      console.error(err);
+      document.getElementById("saved-time").textContent = "Erro ao salvar.";
+    }
+  }
+
+  window.salvar = salvar; // Expõe para o HTML
+
+  function aplicarTemaNoturno() {
+    const hora = new Date().getHours();
+    if (hora >= 19 || hora < 7) {
+      document.body.classList.add("dark-mode");
+    }
+  }
+
+  aplicarTemaNoturno();
+</script>
