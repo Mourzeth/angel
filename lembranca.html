@@ -1,1 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lembranças</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(to bottom, #e0f7fa, #ffffff);
+      --container-bg: #ffffffd0;
+      --text-color: #333;
+      --box-shadow: rgba(0, 0, 0, 0.2);
+    }
 
+    .dark-mode {
+      --bg-gradient: linear-gradient(to bottom, #0a2c3d, #1d3e50);
+      --container-bg: #1e3a4cdd;
+      --text-color: #f0f0f0;
+      --box-shadow: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Georgia', serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      transition: background 0.5s, color 0.5s;
+    }
+
+    h1 {
+      text-align: center;
+      text-shadow: 0 0 10px #fff;
+    }
+
+    .entry {
+      background: var(--container-bg);
+      margin: 1rem auto;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px var(--box-shadow);
+      max-width: 800px;
+    }
+
+    .entry-time {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 0.5rem;
+    }
+
+    .menu {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .menu a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 0 10px #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <a href="index.html">Voltar</a>
+  </div>
+
+  <h1>Lembranças Salvas</h1>
+  <div id="registros"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7ETRaWcGU1XPmGmFN1-s0vtjyw-LBAAs",
+      authDomain: "blouch-8680e.firebaseapp.com",
+      projectId: "blouch-8680e",
+      storageBucket: "blouch-8680e.appspot.com",
+      messagingSenderId: "646457470098",
+      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b",
+      measurementId: "G-V6QYZ4G0H3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth();
+
+    signInAnonymously(auth).catch((error) => {
+      console.error("Erro ao autenticar:", error);
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const uid = user.uid;
+        const registrosRef = collection(db, "usuarios", uid, "registros");
+        const q = query(registrosRef, orderBy("timestamp", "desc"));
+
+        try {
+          const querySnapshot = await getDocs(q);
+          const container = document.getElementById("registros");
+          container.innerHTML = "";
+
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            const div = document.createElement("div");
+            div.className = "entry";
+
+            const time = data.timestamp?.toDate().toLocaleString() || "Sem data";
+            div.innerHTML = `
+              <div class="entry-time">${time}</div>
+              <div>${data.texto}</div>
+            `;
+            container.appendChild(div);
+          });
+
+        } catch (error) {
+          console.error("Erro ao buscar registros:", error);
+        }
+      }
+    });
+
+    // Tema noturno automático
+    function aplicarTemaNoturno() {
+      const hora = new Date().getHours();
+      if (hora >= 19 || hora < 7) {
+        document.body.classList.add("dark-mode");
+      }
+    }
+
+    aplicarTemaNoturno();
+  </script>
+</body>
+</html>
