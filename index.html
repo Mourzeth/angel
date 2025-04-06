@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lembranças</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diary</title>
   <style>
     body {
       margin: 0;
@@ -12,6 +12,7 @@
       background-size: cover;
       color: #222;
       font-family: 'Georgia', serif;
+      overflow-x: hidden;
     }
 
     h1 {
@@ -30,13 +31,49 @@
       box-shadow: 0 0 20px #888;
     }
 
+    textarea {
+      width: 100%;
+      height: 200px;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 1px solid #bbb;
+      resize: vertical;
+      font-family: 'Georgia', serif;
+      margin-bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: #fff;
+      color: #000;
+      font-weight: bold;
+      padding: 0.75rem 2rem;
+      border-radius: 10px;
+      border: 2px solid #000;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #999;
+    }
+
+    button:hover {
+      background: #000;
+      color: #fff;
+    }
+
     .registro {
       background: #fff;
       padding: 1rem;
       border-radius: 10px;
       box-shadow: 0 0 10px #aaa;
       margin-bottom: 1rem;
-      position: relative;
     }
 
     .registro p {
@@ -49,26 +86,10 @@
       color: #666;
     }
 
-    .registro button {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background: #ff4444;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 0.2rem 0.6rem;
-      cursor: pointer;
-    }
-
-    .registro button:hover {
-      background: #cc0000;
-    }
-
     .menu {
       position: absolute;
       top: 2rem;
-      left: 2rem;
+      right: 2rem;
     }
 
     .menu a {
@@ -83,41 +104,45 @@
   </style>
 </head>
 <body>
+  <audio autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5c2b9f1dd2.mp3?filename=calm-nature-ambient-11090.mp3" type="audio/mpeg">
+  </audio>
+
   <div class="menu">
-    <a href="index.html">Voltar</a>
+    <a href="lembrancas.html">Lembranças</a>
   </div>
 
   <div class="container">
-    <h1>Lembranças</h1>
-    <div id="registros"></div>
+    <h1>Diary</h1>
+    <textarea id="entrada"></textarea>
+    <div class="botoes">
+      <button onclick="salvarMemoria()">Assinar</button>
+    </div>
   </div>
 
   <script>
-    function carregarMemorias() {
-      const registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
-      const container = document.getElementById("registros");
-      container.innerHTML = "";
+    const senha = "0811";
+    const tentativa = prompt("Digite a senha para acessar o Diary:");
+    if (tentativa !== senha) {
+      document.body.innerHTML = '<h1 style="text-align:center; color: #f00; margin-top: 20vh;">Acesso Negado</h1>';
+    } else {
+      const memoriaInput = document.getElementById("entrada");
 
-      registros.forEach((entrada, index) => {
-        const div = document.createElement("div");
-        div.className = "registro";
-        div.innerHTML = `
-          <p>${entrada.texto}</p>
-          <small>${entrada.data}</small>
-          <button onclick="deletar(${index})">X</button>
-        `;
-        container.appendChild(div);
-      });
+      function salvarMemoria() {
+        const texto = memoriaInput.value.trim();
+        if (!texto) return;
+
+        const entrada = {
+          texto,
+          data: new Date().toLocaleString()
+        };
+
+        let registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
+        registros.unshift(entrada);
+        localStorage.setItem("diaryEntries", JSON.stringify(registros));
+        memoriaInput.value = "";
+      }
     }
-
-    function deletar(index) {
-      let registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
-      registros.splice(index, 1);
-      localStorage.setItem("diaryEntries", JSON.stringify(registros));
-      carregarMemorias();
-    }
-
-    carregarMemorias();
   </script>
 </body>
 </html>
