@@ -14,7 +14,7 @@
     }
 
     body.day {
-      background: linear-gradient(135deg, #091921, #1f3b4d, #3e5d73);
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
       color: #e0f7fa;
     }
 
@@ -124,19 +124,67 @@
       background: #006064;
       color: #fff;
     }
+
+    #senha-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      color: #fff;
+    }
+
+    #senha-container input {
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    #senha-container button {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+  <div id="senha-container">
+    <h2>Insira a senha para acessar</h2>
+    <input type="password" id="senha" placeholder="Senha" />
+    <button onclick="verificarSenha()">Entrar</button>
+  </div>
+
   <div class="menu">
     <a href="index.html">Voltar</a>
   </div>
 
-  <div class="container">
+  <div class="container" style="display:none;" id="conteudo">
     <h1>Lembranças</h1>
     <div id="lista-memorias"></div>
   </div>
 
   <script>
+    function verificarSenha() {
+      const senha = document.getElementById("senha").value;
+      if (senha === "0811") {
+        document.getElementById("senha-container").style.display = "none";
+        document.getElementById("conteudo").style.display = "block";
+      } else {
+        alert("Senha incorreta.");
+      }
+    }
+
     function carregarMemorias() {
       const lista = document.getElementById("lista-memorias");
       const registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
