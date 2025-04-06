@@ -29,12 +29,6 @@
       font-family: 'Georgia', serif;
       background: var(--bg-gradient);
       color: var(--text-color);
-      transition: background 0.5s, color 0.5s;
-    }
-
-    h1 {
-      text-align: center;
-      text-shadow: 0 0 10px #fff;
     }
 
     .container {
@@ -66,7 +60,6 @@
       display: block;
       text-align: right;
       color: #aaa;
-      font-style: italic;
     }
 
     .registro button {
@@ -84,6 +77,10 @@
 
     .registro button:hover {
       background: #cc0000;
+    }
+
+    h1 {
+      text-align: center;
     }
 
     .menu {
@@ -121,9 +118,6 @@
       apiKey: "AIzaSyB7ETRaWcGU1XPmGmFN1-s0vtjyw-LBAAs",
       authDomain: "blouch-8680e.firebaseapp.com",
       projectId: "blouch-8680e",
-      storageBucket: "blouch-8680e.appspot.com",
-      messagingSenderId: "646457470098",
-      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -133,29 +127,28 @@
     let uid = null;
 
     signInAnonymously(auth).catch(console.error);
-
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         uid = user.uid;
-        await carregarMemorias();
+        carregarMemorias();
       }
     });
 
     async function carregarMemorias() {
       const ref = collection(db, "usuarios", uid, "registros");
       const q = query(ref, orderBy("timestamp", "desc"));
-      const snapshot = await getDocs(q);
+      const snap = await getDocs(q);
       const container = document.getElementById("registros");
       container.innerHTML = "";
 
-      snapshot.forEach(docSnap => {
-        const data = docSnap.data();
+      snap.forEach((docu) => {
+        const data = docu.data();
         const div = document.createElement("div");
         div.className = "registro";
         div.innerHTML = `
           <p>${data.texto}</p>
-          <small>${data.timestamp?.toDate().toLocaleString() || 'Sem data'}</small>
-          <button onclick="deletar('${docSnap.id}')">X</button>
+          <small>${data.timestamp?.toDate().toLocaleString() || "Sem data"}</small>
+          <button onclick="deletar('${docu.id}')">X</button>
         `;
         container.appendChild(div);
       });
