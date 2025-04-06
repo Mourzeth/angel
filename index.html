@@ -1,201 +1,137 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Diary</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You is a Angel</title>
   <style>
     body {
       margin: 0;
       padding: 2rem;
+      background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+      color: #333;
       font-family: 'Georgia', serif;
-      transition: background 0.5s, color 0.5s;
+      background-image: url('https://i.imgur.com/7YV1F6J.png');
+      background-repeat: repeat;
     }
 
-    body.day {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #e0f7fa;
-    }
-
-    body.night {
-      background: linear-gradient(135deg, #000000, #0d0d0d);
-      color: #b2ebf2;
-    }
-
-    h1 {
+    h1, h2 {
       text-align: center;
-      margin-bottom: 2rem;
-      text-shadow: 0 0 10px #00e5ff;
+      color: #444;
+      text-shadow: 0 0 10px #fff;
     }
 
-    .container {
+    .angel-container {
       max-width: 800px;
       margin: 0 auto;
+      background: #ffffffd0;
+      border-radius: 20px;
       padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     }
 
-    body.day .container {
-      background: rgba(9, 25, 33, 0.9);
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 1rem;
     }
 
-    body.night .container {
-      background: rgba(20, 20, 20, 0.95);
-    }
-
-    textarea {
+    textarea, input[type="text"] {
       width: 100%;
-      height: 200px;
-      border-radius: 10px;
       padding: 1rem;
-      resize: none;
-      border: none;
-      font-size: 1rem;
+      margin-top: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
       font-family: 'Georgia', serif;
     }
 
     button {
-      display: block;
-      margin: 1.5rem auto 0;
-      padding: 0.6rem 1.2rem;
-      border-radius: 10px;
+      margin-top: 1.5rem;
+      padding: 1rem 2rem;
+      background: #b2ebf2;
       border: none;
+      border-radius: 10px;
       font-weight: bold;
       cursor: pointer;
+      box-shadow: 0 0 10px #90caf9;
     }
 
-    body.day button {
-      background: #00e5ff;
-      color: #000;
-    }
-
-    body.night button {
-      background: #26c6da;
-      color: #000;
-    }
-
-    button:hover {
-      background: #006064;
-      color: #fff;
+    .saved-time {
+      text-align: center;
+      margin-top: 1rem;
+      color: #666;
+      font-style: italic;
     }
 
     .menu {
-      position: absolute;
-      top: 2rem;
-      left: 2rem;
+      text-align: center;
+      margin-top: 2rem;
     }
 
     .menu a {
+      background: #fff;
+      color: #000;
       text-decoration: none;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1.2rem;
       border-radius: 8px;
       font-weight: bold;
-      box-shadow: 0 0 10px #00e5ff;
-    }
-
-    body.day .menu a {
-      background: #00e5ff;
-      color: #000;
-    }
-
-    body.night .menu a {
-      background: #80deea;
-      color: #000;
-    }
-
-    .menu a:hover {
-      background: #006064;
-      color: #fff;
-    }
-
-    #senha-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 9999;
-      color: #fff;
-    }
-
-    #senha-container input {
-      padding: 0.5rem;
-      border-radius: 6px;
-      border: none;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    #senha-container button {
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
+      box-shadow: 0 0 10px #aaa;
     }
   </style>
 </head>
 <body>
-  <div id="senha-container">
-    <h2>Insira a senha para acessar</h2>
-    <input type="password" id="senha" placeholder="Senha" />
-    <button onclick="verificarSenha()">Entrar</button>
-  </div>
+  <audio autoplay loop volume="0.2">
+    <source src="https://cdn.pixabay.com/download/audio/2022/10/31/audio_fdb7a5d48d.mp3?filename=healing-ambient-ambient-music-for-spa-meditation-yoga-12247.mp3" type="audio/mpeg">
+    Seu navegador não suporta o elemento áudio.
+  </audio>
 
-  <div class="menu">
-    <a href="lembranças.html">Lembranças</a>
-  </div>
+  <div class="angel-container">
+    <h1>You is a Angel</h1>
+    <h2>Reflexões sussurradas pelas asas do tempo</h2>
 
-  <div class="container" style="display:none;" id="conteudo">
-    <h1>Diary</h1>
-    <textarea id="entrada"></textarea>
-    <button onclick="salvarEntrada()">Assinar</button>
+    <label for="sentimento">Sentimento Celestial</label>
+    <textarea id="sentimento" placeholder="O que toca seu coração hoje?"></textarea>
+
+    <label for="mensagem">Mensagem Divina</label>
+    <textarea id="mensagem" placeholder="O que o universo parece te dizer?"></textarea>
+
+    <label for="introspecao">Introspecção Angelical</label>
+    <textarea id="introspecao" placeholder="Que verdades silenciosas você encontrou dentro de si?"></textarea>
+
+    <label for="registro">Identificação</label>
+    <input type="text" id="registro" placeholder="Data, símbolo, estado espiritual" />
+
+    <button onclick="salvarEntrada()">Salvar Registro</button>
+    <div class="saved-time" id="saved-time"></div>
+
+    <div class="menu">
+      <a href="lembranca.html">Ver Lembranças</a>
+    </div>
   </div>
 
   <script>
-    function verificarSenha() {
-      const senha = document.getElementById("senha").value;
-      if (senha === "0811") {
-        document.getElementById("senha-container").style.display = "none";
-        document.getElementById("conteudo").style.display = "block";
-      } else {
-        alert("Senha incorreta.");
+    const senha = "0811";
+    const tentativa = prompt("Digite a senha para acessar seu diario angelical:");
+    if (tentativa !== senha) {
+      document.body.innerHTML = '<h1 style="text-align:center; color: #c00; margin-top: 20vh;">Acesso Negado</h1>';
+    } else {
+      const campos = ['sentimento', 'mensagem', 'introspecao', 'registro'];
+
+      function salvarEntrada() {
+        const entrada = {};
+        campos.forEach(id => entrada[id] = document.getElementById(id).value);
+        entrada.data = new Date().toLocaleString();
+
+        let historico = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+        historico.unshift(entrada);
+
+        localStorage.setItem('diaryEntries', JSON.stringify(historico));
+        document.getElementById('saved-time').textContent = `Registrado às ${entrada.data} — Seu anjo interior ouviu.`;
+
+        // Limpar os campos após salvar
+        campos.forEach(id => document.getElementById(id).value = "");
       }
     }
-
-    function salvarEntrada() {
-      const texto = document.getElementById("entrada").value.trim();
-      if (!texto) return alert("Escreva algo antes de assinar.");
-
-      const agora = new Date();
-      const dataHora = agora.toLocaleString('pt-BR', { hour12: false });
-
-      const novaEntrada = { data: dataHora, texto };
-      const registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
-
-      registros.push(novaEntrada);
-      localStorage.setItem("diaryEntries", JSON.stringify(registros));
-      document.getElementById("entrada").value = "";
-      alert("Assinado com sucesso.");
-    }
-
-    function aplicarModoAutomatico() {
-      const hora = new Date().getHours();
-      if (hora >= 19 || hora < 4) {
-        document.body.classList.add('night');
-      } else {
-        document.body.classList.add('day');
-      }
-    }
-
-    aplicarModoAutomatico();
   </script>
 </body>
 </html>
