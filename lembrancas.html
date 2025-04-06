@@ -8,47 +8,87 @@
     body {
       margin: 0;
       padding: 2rem;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #e0f7fa;
       font-family: 'Georgia', serif;
       overflow-x: hidden;
+      transition: background 0.5s, color 0.5s;
+    }
+
+    body.day {
+      background: linear-gradient(135deg, #091921, #1f3b4d, #3e5d73);
+      color: #e0f7fa;
+    }
+
+    body.night {
+      background: linear-gradient(135deg, #000000, #0d0d0d);
+      color: #b2ebf2;
     }
 
     h1 {
       text-align: center;
-      color: #e0f7fa;
-      text-shadow: 0 0 10px #00e5ff;
       margin-bottom: 2rem;
+      text-shadow: 0 0 10px #00e5ff;
+    }
+
+    body.day h1 {
+      color: #e0f7fa;
+    }
+
+    body.night h1 {
+      color: #b2ebf2;
     }
 
     .container {
       max-width: 800px;
       margin: 0 auto;
-      background: rgba(15, 32, 39, 0.9);
       padding: 2rem;
       border-radius: 15px;
       box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
     }
 
+    body.day .container {
+      background: rgba(9, 25, 33, 0.9);
+    }
+
+    body.night .container {
+      background: rgba(20, 20, 20, 0.95);
+    }
+
     .memoria {
-      background: rgba(224, 247, 250, 0.1);
-      border: 1px solid #4dd0e1;
       border-radius: 10px;
       padding: 1rem;
       margin-bottom: 1.5rem;
       position: relative;
     }
 
+    body.day .memoria {
+      background: rgba(224, 247, 250, 0.1);
+      border: 1px solid #4dd0e1;
+    }
+
+    body.night .memoria {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #80deea;
+    }
+
     .memoria button {
       position: absolute;
       top: 10px;
       right: 10px;
-      background: #00e5ff;
-      color: #000;
       border: none;
       padding: 0.3rem 0.8rem;
       border-radius: 6px;
       cursor: pointer;
+      font-weight: bold;
+    }
+
+    body.day .memoria button {
+      background: #00e5ff;
+      color: #000;
+    }
+
+    body.night .memoria button {
+      background: #26c6da;
+      color: #000;
     }
 
     .memoria button:hover {
@@ -63,13 +103,21 @@
     }
 
     .menu a {
-      background: #00e5ff;
-      color: #000;
       text-decoration: none;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       font-weight: bold;
       box-shadow: 0 0 10px #00e5ff;
+    }
+
+    body.day .menu a {
+      background: #00e5ff;
+      color: #000;
+    }
+
+    body.night .menu a {
+      background: #80deea;
+      color: #000;
     }
 
     .menu a:hover {
@@ -116,6 +164,16 @@
       location.reload();
     }
 
+    function aplicarModoAutomatico() {
+      const hora = new Date().getHours();
+      if (hora >= 19 || hora < 4) {
+        document.body.classList.add('night');
+      } else {
+        document.body.classList.add('day');
+      }
+    }
+
+    aplicarModoAutomatico();
     carregarMemorias();
   </script>
 </body>
