@@ -1,52 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lembranças</title>
   <style>
+    :root {
+      --bg-color: #b3e5fc;
+      --bg-gradient: linear-gradient(to bottom, #b3e5fc, #e1f5fe);
+      --container-bg: #ffffffdd;
+      --text-color: #333;
+      --registro-bg: #fff;
+      --registro-text: #000;
+    }
+
+    .dark-mode {
+      --bg-color: #0a2c3d;
+      --bg-gradient: linear-gradient(to bottom, #0a2c3d, #1d3e50);
+      --container-bg: #1e3a4cdd;
+      --text-color: #f0f0f0;
+      --registro-bg: #2a4a5f;
+      --registro-text: #e0e0e0;
+    }
+
     body {
       margin: 0;
       padding: 2rem;
-      background: url('https://images.unsplash.com/photo-1608889371180-3d5bd0b34c6e?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-      background-size: cover;
-      color: #222;
       font-family: 'Georgia', serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      transition: background 0.5s, color 0.5s;
     }
 
     h1 {
       text-align: center;
-      color: #fff;
-      text-shadow: 0 0 10px #333;
-      margin-bottom: 2rem;
+      text-shadow: 0 0 10px #fff;
     }
 
     .container {
       max-width: 800px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.4);
+      background: var(--container-bg);
+      border-radius: 20px;
       padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 0 20px #888;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
     }
 
     .registro {
-      background: #fff;
+      background: var(--registro-bg);
+      color: var(--registro-text);
       padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #aaa;
-      margin-bottom: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #bbb;
+      margin-bottom: 1.5rem;
       position: relative;
+      transition: background 0.3s, color 0.3s;
     }
 
     .registro p {
-      margin: 0.3rem 0;
+      margin: 0.5rem 0;
+      font-size: 1.1rem;
+      white-space: pre-wrap;
     }
 
     .registro small {
       display: block;
       text-align: right;
-      color: #666;
+      color: #aaa;
+      font-style: italic;
     }
 
     .registro button {
@@ -56,9 +77,10 @@
       background: #ff4444;
       color: white;
       border: none;
-      border-radius: 6px;
-      padding: 0.2rem 0.6rem;
+      border-radius: 8px;
+      padding: 0.3rem 0.8rem;
       cursor: pointer;
+      font-weight: bold;
     }
 
     .registro button:hover {
@@ -66,25 +88,24 @@
     }
 
     .menu {
-      position: absolute;
-      top: 2rem;
-      left: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
     }
 
     .menu a {
       background: #fff;
       color: #000;
       text-decoration: none;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1.2rem;
       border-radius: 8px;
       font-weight: bold;
-      box-shadow: 0 0 10px #fff;
+      box-shadow: 0 0 10px #aaa;
     }
   </style>
 </head>
 <body>
   <div class="menu">
-    <a href="index.html">Voltar</a>
+    <a href="index.html">Voltar para o Diário</a>
   </div>
 
   <div class="container">
@@ -102,10 +123,7 @@
         const div = document.createElement("div");
         div.className = "registro";
         div.innerHTML = `
-          <p><strong>Sentimento:</strong> ${entrada.sentimento}</p>
-          <p><strong>Mensagem:</strong> ${entrada.mensagem}</p>
-          <p><strong>Introspecção:</strong> ${entrada.introspecao}</p>
-          <p><strong>Identificação:</strong> ${entrada.registro}</p>
+          <p>${entrada.texto}</p>
           <small>${entrada.data}</small>
           <button onclick="deletar(${index})">X</button>
         `;
@@ -120,6 +138,14 @@
       carregarMemorias();
     }
 
+    function aplicarTemaNoturno() {
+      const hora = new Date().getHours();
+      if (hora >= 19 || hora < 7) {
+        document.body.classList.add("dark-mode");
+      }
+    }
+
+    aplicarTemaNoturno();
     carregarMemorias();
   </script>
 </body>
