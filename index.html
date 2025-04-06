@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Diary</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lembranças</title>
   <style>
     body {
       margin: 0;
       padding: 2rem;
-      background: url('https://images.unsplash.com/photo-1608889174118-6348c2baf2e6?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+      background: url('https://images.unsplash.com/photo-1608889371180-3d5bd0b34c6e?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
       background-size: cover;
       color: #222;
       font-family: 'Georgia', serif;
-      overflow-x: hidden;
     }
 
     h1 {
@@ -25,46 +24,10 @@
     .container {
       max-width: 800px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.65);
+      background: rgba(255, 255, 255, 0.4);
       padding: 2rem;
       border-radius: 15px;
       box-shadow: 0 0 20px #888;
-    }
-
-    textarea {
-      width: 100%;
-      height: 200px;
-      padding: 1rem;
-      font-size: 1rem;
-      border-radius: 10px;
-      border: 1px solid #bbb;
-      resize: vertical;
-      font-family: 'Georgia', serif;
-      margin-bottom: 1.5rem;
-    }
-
-    .botoes {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    button {
-      background: #fff;
-      color: #000;
-      font-weight: bold;
-      padding: 0.75rem 2rem;
-      border-radius: 10px;
-      border: 2px solid #000;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 10px #999;
-    }
-
-    button:hover {
-      background: #000;
-      color: #fff;
     }
 
     .registro {
@@ -73,6 +36,7 @@
       border-radius: 10px;
       box-shadow: 0 0 10px #aaa;
       margin-bottom: 1rem;
+      position: relative;
     }
 
     .registro p {
@@ -84,76 +48,76 @@
       text-align: right;
       color: #666;
     }
+
+    .registro button {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.2rem 0.6rem;
+      cursor: pointer;
+    }
+
+    .registro button:hover {
+      background: #cc0000;
+    }
+
+    .menu {
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+    }
+
+    .menu a {
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 0 10px #fff;
+    }
   </style>
 </head>
 <body>
-  <audio autoplay loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5c2b9f1dd2.mp3?filename=calm-nature-ambient-11090.mp3" type="audio/mpeg">
-  </audio>
+  <div class="menu">
+    <a href="index.html">Voltar</a>
+  </div>
 
   <div class="container">
-    <h1>Diary</h1>
-
-    <textarea id="entrada"></textarea>
-    <div class="botoes">
-      <button onclick="salvarMemoria()">Assinar</button>
-      <button onclick="mostrarMemorias()">Ver Lembranças</button>
-      <button onclick="apagarMemorias()">Apagar Tudo</button>
-    </div>
-
-    <div id="memorias"></div>
+    <h1>Lembranças</h1>
+    <div id="registros"></div>
   </div>
 
   <script>
-    const senha = "0811";
-    const tentativa = prompt("Digite a senha para acessar o Diary:");
-    if (tentativa !== senha) {
-      document.body.innerHTML = '<h1 style="text-align:center; color: #f00; margin-top: 20vh;">Acesso Negado</h1>';
-    } else {
-      const memoriaInput = document.getElementById("entrada");
-      const container = document.getElementById("memorias");
+    function carregarMemorias() {
+      const registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
+      const container = document.getElementById("registros");
+      container.innerHTML = "";
 
-      function salvarMemoria() {
-        const texto = memoriaInput.value.trim();
-        if (!texto) return;
-
-        const entrada = {
-          texto,
-          data: new Date().toLocaleString()
-        };
-
-        let registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
-        registros.unshift(entrada);
-        localStorage.setItem("diaryEntries", JSON.stringify(registros));
-        memoriaInput.value = "";
-        mostrarMemorias();
-      }
-
-      function mostrarMemorias() {
-        let registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
-        container.innerHTML = "";
-        registros.forEach(e => {
-          const bloco = document.createElement("div");
-          bloco.className = "registro";
-          bloco.innerHTML = `
-            <h3>Lembrança</h3>
-            <p>${e.texto}</p>
-            <small>${e.data}</small>
-          `;
-          container.appendChild(bloco);
-        });
-      }
-
-      function apagarMemorias() {
-        const confirmar = confirm("Tem certeza que deseja apagar todas as lembranças?");
-        if (confirmar) {
-          localStorage.removeItem("diaryEntries");
-          mostrarMemorias();
-        }
-      }
-
-      mostrarMemorias();
+      registros.forEach((entrada, index) => {
+        const div = document.createElement("div");
+        div.className = "registro";
+        div.innerHTML = `
+          <p>${entrada.texto}</p>
+          <small>${entrada.data}</small>
+          <button onclick="deletar(${index})">X</button>
+        `;
+        container.appendChild(div);
+      });
     }
+
+    function deletar(index) {
+      let registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
+      registros.splice(index, 1);
+      localStorage.setItem("diaryEntries", JSON.stringify(registros));
+      carregarMemorias();
+    }
+
+    carregarMemorias();
   </script>
 </body>
 </html>
