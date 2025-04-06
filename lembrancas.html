@@ -1,68 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lembranças</title>
   <style>
     body {
       margin: 0;
       padding: 2rem;
-      background: url('https://images.unsplash.com/photo-1608889371180-3d5bd0b34c6e?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-      background-size: cover;
-      color: #222;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #e0f7fa;
       font-family: 'Georgia', serif;
+      overflow-x: hidden;
     }
 
     h1 {
       text-align: center;
-      color: #fff;
-      text-shadow: 0 0 10px #333;
+      color: #e0f7fa;
+      text-shadow: 0 0 10px #00e5ff;
       margin-bottom: 2rem;
     }
 
     .container {
       max-width: 800px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(0, 51, 85, 0.5);
       padding: 2rem;
       border-radius: 15px;
-      box-shadow: 0 0 20px #888;
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
     }
 
-    .registro {
-      background: #fff;
-      padding: 1rem;
+    .memoria {
+      background: rgba(224, 247, 250, 0.1);
+      border: 1px solid #4dd0e1;
       border-radius: 10px;
-      box-shadow: 0 0 10px #aaa;
-      margin-bottom: 1rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
       position: relative;
     }
 
-    .registro p {
-      margin: 0.3rem 0;
-    }
-
-    .registro small {
-      display: block;
-      text-align: right;
-      color: #666;
-    }
-
-    .registro button {
+    .memoria button {
       position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background: #ff4444;
-      color: white;
+      top: 10px;
+      right: 10px;
+      background: #00e5ff;
+      color: #000;
       border: none;
+      padding: 0.3rem 0.8rem;
       border-radius: 6px;
-      padding: 0.2rem 0.6rem;
       cursor: pointer;
     }
 
-    .registro button:hover {
-      background: #cc0000;
+    .memoria button:hover {
+      background: #006064;
+      color: #fff;
     }
 
     .menu {
@@ -72,13 +63,18 @@
     }
 
     .menu a {
-      background: #fff;
+      background: #00e5ff;
       color: #000;
       text-decoration: none;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       font-weight: bold;
-      box-shadow: 0 0 10px #fff;
+      box-shadow: 0 0 10px #00e5ff;
+    }
+
+    .menu a:hover {
+      background: #006064;
+      color: #fff;
     }
   </style>
 </head>
@@ -89,32 +85,35 @@
 
   <div class="container">
     <h1>Lembranças</h1>
-    <div id="registros"></div>
+    <div id="lista-memorias"></div>
   </div>
 
   <script>
     function carregarMemorias() {
+      const lista = document.getElementById("lista-memorias");
       const registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
-      const container = document.getElementById("registros");
-      container.innerHTML = "";
+      if (registros.length === 0) {
+        lista.innerHTML = "<p style='text-align:center;'>Nenhuma lembrança registrada ainda.</p>";
+        return;
+      }
 
-      registros.forEach((entrada, index) => {
+      registros.forEach((memoria, index) => {
         const div = document.createElement("div");
-        div.className = "registro";
+        div.className = "memoria";
         div.innerHTML = `
-          <p>${entrada.texto}</p>
-          <small>${entrada.data}</small>
-          <button onclick="deletar(${index})">X</button>
+          <strong>${memoria.data}</strong><br><br>
+          ${memoria.texto.replace(/\n/g, '<br>')}<br>
+          <button onclick="deletarMemoria(${index})">Apagar</button>
         `;
-        container.appendChild(div);
+        lista.appendChild(div);
       });
     }
 
-    function deletar(index) {
+    function deletarMemoria(index) {
       let registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
       registros.splice(index, 1);
       localStorage.setItem("diaryEntries", JSON.stringify(registros));
-      carregarMemorias();
+      location.reload();
     }
 
     carregarMemorias();
