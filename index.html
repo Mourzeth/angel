@@ -114,26 +114,56 @@
   <div class="diary-container">
     <h1>Diary</h1>
     <textarea id="entrada" placeholder=""></textarea>
-    <button onclick="salvarEntrada()">Salvar</button>
+    <button onclick="salvar()">Salvar</button>
     <div class="saved-time" id="saved-time"></div>
   </div>
 
-  <script>
-    function salvarEntrada() {
-      const texto = document.getElementById("entrada").value;
-      if (!texto.trim()) return;
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-      const entrada = {
-        texto: texto,
-        data: new Date().toLocaleString()
-      };
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7ETRaWcGU1XPmGmFN1-s0vtjyw-LBAAs",
+      authDomain: "blouch-8680e.firebaseapp.com",
+      projectId: "blouch-8680e",
+      storageBucket: "blouch-8680e.appspot.com",
+      messagingSenderId: "646457470098",
+      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b",
+      measurementId: "G-V6QYZ4G0H3"
+    };
 
-      let registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
-      registros.unshift(entrada);
-      localStorage.setItem("diaryEntries", JSON.stringify(registros));
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth();
 
-      document.getElementById("saved-time").textContent = `Salvo às ${entrada.data}`;
-      document.getElementById("entrada").value = "";
+    signInAnonymously(auth).catch((error) => {
+      console.error("Erro ao autenticar:", error);
+    });
+
+    async function salvar() {
+      const texto = document.getElementById("entrada").value.trim();
+      if (!texto) return;
+
+      const uid = auth.currentUser?.uid;
+      if (!uid) {
+        document.getElementById("saved-time").textContent = "Erro de autenticação.";
+        return;
+      }
+
+      const ref = collection(db, "usuarios", uid, "registros");
+      try {
+        await addDoc(ref, {
+          texto,
+          timestamp: serverTimestamp()
+        });
+        const agora = new Date().toLocaleTimeString();
+        document.getElementById("saved-time").textContent = `Salvo às ${agora}`;
+        document.getElementById("entrada").value = "";
+      } catch (err) {
+        console.error(err);
+        document.getElementById("saved-time").textContent = "Erro ao salvar.";
+      }
     }
 
     function aplicarTemaNoturno() {
