@@ -6,7 +6,6 @@
   <title>Lembranças</title>
   <style>
     :root {
-      --bg-color: #b3e5fc;
       --bg-gradient: linear-gradient(to bottom, #b3e5fc, #e1f5fe);
       --container-bg: #ffffffdd;
       --text-color: #333;
@@ -15,7 +14,6 @@
     }
 
     .dark-mode {
-      --bg-color: #0a2c3d;
       --bg-gradient: linear-gradient(to bottom, #0a2c3d, #1d3e50);
       --container-bg: #1e3a4cdd;
       --text-color: #f0f0f0;
@@ -113,30 +111,53 @@
     <div id="registros"></div>
   </div>
 
-  <script>
-    function carregarMemorias() {
-      const registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB7ETRaWcGU1XPmGmFN1-s0vtjyw-LBAAs",
+      authDomain: "blouch-8680e.firebaseapp.com",
+      projectId: "blouch-8680e",
+      storageBucket: "blouch-8680e.appspot.com",
+      messagingSenderId: "646457470098",
+      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b",
+      measurementId: "G-V6QYZ4G0H3"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function carregarMemorias() {
       const container = document.getElementById("registros");
       container.innerHTML = "";
 
-      registros.forEach((entrada, index) => {
+      const q = query(collection(db, "entries"), orderBy("data", "desc"));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        container.innerHTML = "<p>Nenhuma lembrança encontrada.</p>";
+        return;
+      }
+
+      snapshot.forEach(docSnap => {
+        const entrada = docSnap.data();
         const div = document.createElement("div");
         div.className = "registro";
         div.innerHTML = `
           <p>${entrada.texto}</p>
-          <small>${entrada.data}</small>
-          <button onclick="deletar(${index})">X</button>
+          <small>${new Date(entrada.data.seconds * 1000).toLocaleString()}</small>
+          <button onclick="deletarMemoria('${docSnap.id}')">X</button>
         `;
         container.appendChild(div);
       });
     }
 
-    function deletar(index) {
-      let registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
-      registros.splice(index, 1);
-      localStorage.setItem("diaryEntries", JSON.stringify(registros));
+    window.deletarMemoria = async (id) => {
+      if (!confirm("Tem certeza que deseja apagar esta lembrança?")) return;
+      await deleteDoc(doc(db, "entries", id));
       carregarMemorias();
-    }
+    };
 
     function aplicarTemaNoturno() {
       const hora = new Date().getHours();
