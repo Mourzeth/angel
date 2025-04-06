@@ -8,9 +8,9 @@
     body {
       margin: 0;
       padding: 2rem;
-      background: #f0f0f0 url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+      background: #e6e6e6 url('https://images.unsplash.com/photo-1608889174118-6348c2baf2e6?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
       background-size: cover;
-      color: #333;
+      color: #222;
       font-family: 'Georgia', serif;
       overflow-x: hidden;
     }
@@ -18,17 +18,17 @@
     h1 {
       text-align: center;
       color: #fff;
-      text-shadow: 0 0 10px #aaa;
+      text-shadow: 0 0 8px #999;
       margin-bottom: 2rem;
     }
 
     .container {
       max-width: 800px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.85);
       padding: 2rem;
       border-radius: 15px;
-      box-shadow: 0 0 20px #ccc;
+      box-shadow: 0 0 20px #bbb;
     }
 
     textarea {
@@ -37,7 +37,7 @@
       padding: 1rem;
       font-size: 1rem;
       border-radius: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid #bbb;
       resize: vertical;
       font-family: 'Georgia', serif;
       margin-bottom: 1.5rem;
@@ -89,7 +89,7 @@
   <div class="container">
     <h1>Diary</h1>
 
-    <textarea id="entrada" placeholder="Escreva aqui..."></textarea>
+    <textarea id="entrada" placeholder=""></textarea>
     <button onclick="salvarMemoria()">Assinar</button>
 
     <div id="memorias"></div>
@@ -127,6 +127,7 @@
           const bloco = document.createElement("div");
           bloco.className = "registro";
           bloco.innerHTML = `
+            <h3>Lembrança</h3>
             <p>${e.texto}</p>
             <small>${e.data}</small>
           `;
