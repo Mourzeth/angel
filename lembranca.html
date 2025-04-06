@@ -6,6 +6,7 @@
   <title>Lembranças</title>
   <style>
     :root {
+      --bg-color: #b3e5fc;
       --bg-gradient: linear-gradient(to bottom, #b3e5fc, #e1f5fe);
       --container-bg: #ffffffdd;
       --text-color: #333;
@@ -14,6 +15,7 @@
     }
 
     .dark-mode {
+      --bg-color: #0a2c3d;
       --bg-gradient: linear-gradient(to bottom, #0a2c3d, #1d3e50);
       --container-bg: #1e3a4cdd;
       --text-color: #f0f0f0;
@@ -68,23 +70,6 @@
       font-style: italic;
     }
 
-    .registro button {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      background: #ff4444;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 0.3rem 0.8rem;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .registro button:hover {
-      background: #cc0000;
-    }
-
     .menu {
       text-align: center;
       margin-bottom: 2rem;
@@ -113,7 +98,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyB7ETRaWcGU1XPmGmFN1-s0vtjyw-LBAAs",
@@ -121,43 +107,31 @@
       projectId: "blouch-8680e",
       storageBucket: "blouch-8680e.appspot.com",
       messagingSenderId: "646457470098",
-      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b",
-      measurementId: "G-V6QYZ4G0H3"
+      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth();
 
-    async function carregarMemorias() {
-      const container = document.getElementById("registros");
-      container.innerHTML = "";
+    signInAnonymously(auth).then(async () => {
+      const uid = auth.currentUser?.uid;
+      if (!uid) return;
 
-      const q = query(collection(db, "entries"), orderBy("data", "desc"));
+      const ref = collection(db, "usuarios", uid, "registros");
+      const q = query(ref, orderBy("timestamp", "desc"));
       const snapshot = await getDocs(q);
 
-      if (snapshot.empty) {
-        container.innerHTML = "<p>Nenhuma lembrança encontrada.</p>";
-        return;
-      }
-
-      snapshot.forEach(docSnap => {
-        const entrada = docSnap.data();
+      const container = document.getElementById("registros");
+      snapshot.forEach(doc => {
+        const data = doc.data();
         const div = document.createElement("div");
         div.className = "registro";
-        div.innerHTML = `
-          <p>${entrada.texto}</p>
-          <small>${new Date(entrada.data.seconds * 1000).toLocaleString()}</small>
-          <button onclick="deletarMemoria('${docSnap.id}')">X</button>
-        `;
+        const date = data.timestamp?.toDate().toLocaleString() || "Sem data";
+        div.innerHTML = `<p>${data.texto}</p><small>${date}</small>`;
         container.appendChild(div);
       });
-    }
-
-    window.deletarMemoria = async (id) => {
-      if (!confirm("Tem certeza que deseja apagar esta lembrança?")) return;
-      await deleteDoc(doc(db, "entries", id));
-      carregarMemorias();
-    };
+    });
 
     function aplicarTemaNoturno() {
       const hora = new Date().getHours();
@@ -167,7 +141,6 @@
     }
 
     aplicarTemaNoturno();
-    carregarMemorias();
   </script>
 </body>
 </html>
