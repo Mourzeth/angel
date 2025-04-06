@@ -1,48 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>You is a Angel</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diary</title>
   <style>
+    :root {
+      --bg-gradient: linear-gradient(to bottom, #e0f7fa, #ffffff);
+      --container-bg: #ffffffd0;
+      --text-color: #333;
+      --box-shadow: rgba(0, 0, 0, 0.2);
+      --textarea-bg: #fff;
+      --textarea-text: #000;
+    }
+
+    .dark-mode {
+      --bg-gradient: linear-gradient(to bottom, #0a2c3d, #1d3e50);
+      --container-bg: #1e3a4cdd;
+      --text-color: #f0f0f0;
+      --box-shadow: rgba(255, 255, 255, 0.1);
+      --textarea-bg: #2a4a5f;
+      --textarea-text: #e0e0e0;
+    }
+
     body {
       margin: 0;
       padding: 2rem;
-      background: linear-gradient(to bottom, #e0f7fa, #ffffff);
-      color: #333;
       font-family: 'Georgia', serif;
-      background-image: url('https://i.imgur.com/7YV1F6J.png');
-      background-repeat: repeat;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      transition: background 0.5s, color 0.5s;
     }
 
-    h1, h2 {
+    h1 {
       text-align: center;
-      color: #444;
+      color: var(--text-color);
       text-shadow: 0 0 10px #fff;
+      margin-bottom: 2rem;
     }
 
-    .angel-container {
+    .diary-container {
       max-width: 800px;
       margin: 0 auto;
-      background: #ffffffd0;
+      background: var(--container-bg);
       border-radius: 20px;
       padding: 2rem;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 30px var(--box-shadow);
     }
 
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 1rem;
-    }
-
-    textarea, input[type="text"] {
+    textarea {
       width: 100%;
-      padding: 1rem;
-      margin-top: 0.5rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
+      height: 300px;
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: none;
+      background: var(--textarea-bg);
+      color: var(--textarea-text);
+      font-size: 1.1rem;
       font-family: 'Georgia', serif;
+      resize: none;
+      box-shadow: 0 0 10px #aaa;
     }
 
     button {
@@ -54,25 +71,30 @@
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 0 10px #90caf9;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #4dd0e1;
     }
 
     .saved-time {
       text-align: center;
       margin-top: 1rem;
-      color: #666;
       font-style: italic;
+      color: #888;
     }
 
     .menu {
       text-align: center;
-      margin-top: 2rem;
+      margin-bottom: 2rem;
     }
 
     .menu a {
+      text-decoration: none;
+      padding: 0.5rem 1rem;
       background: #fff;
       color: #000;
-      text-decoration: none;
-      padding: 0.6rem 1.2rem;
       border-radius: 8px;
       font-weight: bold;
       box-shadow: 0 0 10px #aaa;
@@ -80,58 +102,48 @@
   </style>
 </head>
 <body>
-  <audio autoplay loop volume="0.2">
+  <audio autoplay loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/10/31/audio_fdb7a5d48d.mp3?filename=healing-ambient-ambient-music-for-spa-meditation-yoga-12247.mp3" type="audio/mpeg">
-    Seu navegador não suporta o elemento áudio.
+    Seu navegador não suporta áudio.
   </audio>
 
-  <div class="angel-container">
-    <h1>You is a Angel</h1>
-    <h2>Reflexões sussurradas pelas asas do tempo</h2>
+  <div class="menu">
+    <a href="lembranca.html">Lembranças</a>
+  </div>
 
-    <label for="sentimento">Sentimento Celestial</label>
-    <textarea id="sentimento" placeholder="O que toca seu coração hoje?"></textarea>
-
-    <label for="mensagem">Mensagem Divina</label>
-    <textarea id="mensagem" placeholder="O que o universo parece te dizer?"></textarea>
-
-    <label for="introspecao">Introspecção Angelical</label>
-    <textarea id="introspecao" placeholder="Que verdades silenciosas você encontrou dentro de si?"></textarea>
-
-    <label for="registro">Identificação</label>
-    <input type="text" id="registro" placeholder="Data, símbolo, estado espiritual" />
-
-    <button onclick="salvarEntrada()">Salvar Registro</button>
+  <div class="diary-container">
+    <h1>Diary</h1>
+    <textarea id="entrada" placeholder=""></textarea>
+    <button onclick="salvarEntrada()">Salvar</button>
     <div class="saved-time" id="saved-time"></div>
-
-    <div class="menu">
-      <a href="lembranca.html">Ver Lembranças</a>
-    </div>
   </div>
 
   <script>
-    const senha = "0811";
-    const tentativa = prompt("Digite a senha para acessar seu diario angelical:");
-    if (tentativa !== senha) {
-      document.body.innerHTML = '<h1 style="text-align:center; color: #c00; margin-top: 20vh;">Acesso Negado</h1>';
-    } else {
-      const campos = ['sentimento', 'mensagem', 'introspecao', 'registro'];
+    function salvarEntrada() {
+      const texto = document.getElementById("entrada").value;
+      if (!texto.trim()) return;
 
-      function salvarEntrada() {
-        const entrada = {};
-        campos.forEach(id => entrada[id] = document.getElementById(id).value);
-        entrada.data = new Date().toLocaleString();
+      const entrada = {
+        texto: texto,
+        data: new Date().toLocaleString()
+      };
 
-        let historico = JSON.parse(localStorage.getItem('diaryEntries')) || [];
-        historico.unshift(entrada);
+      let registros = JSON.parse(localStorage.getItem("diaryEntries") || "[]");
+      registros.unshift(entrada);
+      localStorage.setItem("diaryEntries", JSON.stringify(registros));
 
-        localStorage.setItem('diaryEntries', JSON.stringify(historico));
-        document.getElementById('saved-time').textContent = `Registrado às ${entrada.data} — Seu anjo interior ouviu.`;
+      document.getElementById("saved-time").textContent = `Salvo às ${entrada.data}`;
+      document.getElementById("entrada").value = "";
+    }
 
-        // Limpar os campos após salvar
-        campos.forEach(id => document.getElementById(id).value = "");
+    function aplicarTemaNoturno() {
+      const hora = new Date().getHours();
+      if (hora >= 19 || hora < 7) {
+        document.body.classList.add("dark-mode");
       }
     }
+
+    aplicarTemaNoturno();
   </script>
 </body>
 </html>
