@@ -129,17 +129,14 @@
       projectId: "blouch-8680e",
       storageBucket: "blouch-8680e.appspot.com",
       messagingSenderId: "646457470098",
-      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b",
-      measurementId: "G-V6QYZ4G0H3"
+      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth();
 
-    signInAnonymously(auth).catch((error) => {
-      console.error("Erro ao autenticar:", error);
-    });
+    signInAnonymously(auth).catch(console.error);
 
     async function salvar() {
       const texto = document.getElementById("entrada").value.trim();
