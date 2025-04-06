@@ -8,27 +8,26 @@
     body {
       margin: 0;
       padding: 2rem;
-      background: url('https://images.unsplash.com/photo-1608889371180-3d5bd0b34c6e?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-      background-size: cover;
-      color: #222;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #e0f7fa;
       font-family: 'Georgia', serif;
       overflow-x: hidden;
     }
 
     h1 {
       text-align: center;
-      color: #fff;
-      text-shadow: 0 0 10px #333;
+      color: #e0f7fa;
+      text-shadow: 0 0 10px #00e5ff;
       margin-bottom: 2rem;
     }
 
     .container {
       max-width: 800px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(0, 51, 85, 0.5);
       padding: 2rem;
       border-radius: 15px;
-      box-shadow: 0 0 20px #888;
+      box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
     }
 
     textarea {
@@ -37,11 +36,12 @@
       padding: 1rem;
       font-size: 1rem;
       border-radius: 10px;
-      border: 1px solid #bbb;
+      border: 1px solid #4dd0e1;
       resize: vertical;
       font-family: 'Georgia', serif;
       margin-bottom: 1.5rem;
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(224, 247, 250, 0.1);
+      color: #e0f7fa;
     }
 
     .botoes {
@@ -52,38 +52,20 @@
     }
 
     button {
-      background: #fff;
+      background: #00e5ff;
       color: #000;
       font-weight: bold;
       padding: 0.75rem 2rem;
       border-radius: 10px;
-      border: 2px solid #000;
+      border: none;
       cursor: pointer;
       transition: 0.3s;
-      box-shadow: 0 0 10px #999;
+      box-shadow: 0 0 10px #00e5ff;
     }
 
     button:hover {
-      background: #000;
+      background: #006064;
       color: #fff;
-    }
-
-    .registro {
-      background: #fff;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #aaa;
-      margin-bottom: 1rem;
-    }
-
-    .registro p {
-      margin: 0.3rem 0;
-    }
-
-    .registro small {
-      display: block;
-      text-align: right;
-      color: #666;
     }
 
     .menu {
@@ -93,13 +75,18 @@
     }
 
     .menu a {
-      background: #fff;
+      background: #00e5ff;
       color: #000;
       text-decoration: none;
       padding: 0.5rem 1rem;
       border-radius: 8px;
       font-weight: bold;
-      box-shadow: 0 0 10px #fff;
+      box-shadow: 0 0 10px #00e5ff;
+    }
+
+    .menu a:hover {
+      background: #006064;
+      color: #fff;
     }
   </style>
 </head>
@@ -114,7 +101,7 @@
 
   <div class="container">
     <h1>Diary</h1>
-    <textarea id="entrada"></textarea>
+    <textarea id="entrada" placeholder=""></textarea>
     <div class="botoes">
       <button onclick="salvarMemoria()">Assinar</button>
     </div>
