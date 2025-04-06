@@ -34,7 +34,6 @@
 
     h1 {
       text-align: center;
-      color: var(--text-color);
       text-shadow: 0 0 10px #fff;
       margin-bottom: 2rem;
     }
@@ -57,7 +56,6 @@
       background: var(--textarea-bg);
       color: var(--textarea-text);
       font-size: 1.1rem;
-      font-family: 'Georgia', serif;
       resize: none;
       box-shadow: 0 0 10px #aaa;
     }
@@ -71,7 +69,6 @@
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 0 10px #90caf9;
-      transition: background 0.3s;
     }
 
     button:hover {
@@ -102,18 +99,13 @@
   </style>
 </head>
 <body>
-  <audio autoplay loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/10/31/audio_fdb7a5d48d.mp3" type="audio/mpeg">
-    Seu navegador não suporta áudio.
-  </audio>
-
   <div class="menu">
     <a href="lembranca.html">Lembranças</a>
   </div>
 
   <div class="diary-container">
     <h1>Diary</h1>
-    <textarea id="entrada" placeholder="Escreva sua lembrança..."></textarea>
+    <textarea id="entrada" placeholder="Escreva aqui..."></textarea>
     <button onclick="salvar()">Salvar</button>
     <div class="saved-time" id="saved-time"></div>
   </div>
@@ -129,32 +121,32 @@
       projectId: "blouch-8680e",
       storageBucket: "blouch-8680e.appspot.com",
       messagingSenderId: "646457470098",
-      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b"
+      appId: "1:646457470098:web:e220a28b2a9044b31d4a4b",
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth();
 
-    let uid = null;
+    let currentUserId = null;
 
     signInAnonymously(auth).catch(console.error);
-
     onAuthStateChanged(auth, (user) => {
-      if (user) uid = user.uid;
+      if (user) currentUserId = user.uid;
     });
 
     async function salvar() {
       const texto = document.getElementById("entrada").value.trim();
-      if (!texto || !uid) return;
+      if (!texto || !currentUserId) return;
 
-      const ref = collection(db, "usuarios", uid, "registros");
       try {
+        const ref = collection(db, "usuarios", currentUserId, "registros");
         await addDoc(ref, {
           texto,
           timestamp: serverTimestamp()
         });
-        document.getElementById("saved-time").textContent = `Salvo às ${new Date().toLocaleTimeString()}`;
+        const agora = new Date().toLocaleTimeString();
+        document.getElementById("saved-time").textContent = `Salvo às ${agora}`;
         document.getElementById("entrada").value = "";
       } catch (err) {
         console.error("Erro ao salvar:", err);
@@ -173,4 +165,3 @@
   </script>
 </body>
 </html>
-
